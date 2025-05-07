@@ -1,0 +1,7 @@
+*.json
+*.out
+*.tex
+*.gz
+*.log
+*.aux
+*.DS_Store
