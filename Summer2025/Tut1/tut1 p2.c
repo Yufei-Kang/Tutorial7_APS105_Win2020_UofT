@@ -4,7 +4,9 @@
 
 #include <stdio.h>
 
-int main(void) {
+int main(void)
+{
+
   const double CmPerInch = 2.54;
   const double CmPerMetre = 100.00;
   const int InchesPerFoot = 12;

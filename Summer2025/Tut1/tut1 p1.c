@@ -1,17 +1,13 @@
-//
-// A simple C program that prints some output.
-//
 
 #include <stdio.h>
+int main(void)
+{
+  // Print the required messages.
 
-int main(void) {
-  printf("In C, the program to print \"hello, world\" is\n");
-  printf("\n");
-  printf("#include <stdio.h>\n");
-  printf("\n");
-  printf("int main(void)");
-  printf(" {\n");
-  printf("    printf(\"hello, world\\n\");\n");
-  printf("    return 0;\n");
-  printf("}\n");
+  printf("C uses escape sequences for a variety of purposes.\n");
+  printf("Some common ones are:\n");
+  printf("to print \", use \\\"\n");
+  printf("to print \\, use \\\\\n");
+  printf("to jump to a new line, use \\n\n");
+  return 0;
 }
