@@ -6,7 +6,6 @@
 
 int main(void)
 {
-
   const double CmPerInch = 2.54;
   const double CmPerMetre = 100.00;
   const int InchesPerFoot = 12;
@@ -32,7 +31,7 @@ int main(void)
   // how many inches are left after extracting feet
   inches = inches % InchesPerFoot;
 
-  printf("%d yards, %d feet, %d inches, %.2f inches remainder\n", yards, feet,
+  printf("%d yards, %d feet, %d inches, %.5f inches remainder\n", yards, feet,
          inches, distanceInInches);
 
   return 0;
