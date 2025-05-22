@@ -1,0 +1,185 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+%\usepackage[spanish]{babel} %Castellanización
+\usepackage[T1]{fontenc} %escribe lo del teclado
+\usepackage[utf8]{inputenc} %Reconoce algunos símbolos
+\usepackage{lmodern} %optimiza algunas fuentes
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{hyperref} % Uso de links
+ \usepackage[most]{tcolorbox}
+ \usepackage{lmodern}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ \usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip} 
+\usepackage{mathpazo} 
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+ 
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{APS 105: Computer Fundamentals}
+\date{}
+\author{Tutorial \#4\\ 
+Summer 2025}
+
+\maketitle
+
+\section*{Problem 1: Simple Array (Winter 2024  Final Exam, Q1)}
+Write a single C statement that declares a $1$D array of $100$ integers named \textit{arr}, where the first three elements are set to $1$, $3$ and $10$ and the remaining $97$ elements are set to $0$.
+
+\iffalse
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+int arr[100] = {1, 3, 10};
+\end{lstlisting}
+\fi
+\section*{Problem 2: Dynamic Allocation of Arrays (Fall 2015 Final Exam, Q2)}
+Write one C statement that use \textit{malloc} to dynamically allocate an array of elements of type \textit{double}. The allocated array should be called \textit{list}.
+\iffalse
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+double *list = (double *)malloc(1000 * sizeof(double));
+\end{lstlisting}
+\fi
+\section*{Problem 3: 2D Arrays and Functions}
+
+Write a C function called \textit{borderSum} that adds all the border elements of the top-left $2$D square matrix inside a $2$D square array. For example, for the array below, if $n$ is $3$, we should add ${1, 2, 3, 7, 11, 10, 9, 5}$ and return 48. If n is 0, the function should return $0$. If n is $1$, the function should return the top-left element, which is $1$ for the array below.
+
+\[
+\begin{array}{cccc}
+1 & 2 & 3 &4\\
+5 & 6 & 7&8\\
+9&10&11&12\\
+13&14&15&16\\
+\end{array}
+\]
+
+The header of the \textit{borderSum} function is provided below, where $26$ is the number of rows and columns in the $2$D array mat, and n is the size of the square matrix to which we need to get the sum of its border. You can safely assume $n \leq 26$.
+
+\begin{lstlisting}[language=C]
+int borderSum(int mat[][26], int n){
+\end{lstlisting}
+\iffalse
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+int borderSum(int mat[][26], int n) { 
+	int sum = 0, row, col;
+	
+	if (n == 0) {
+		return 0;
+	} 	else if (n == 1) {
+			sum = mat [0][0];
+	} 	else if (n == 2) { //unnecessary else-if, but fine if it is there 
+			sum = mat [0][0] + mat [0][1] + mat [1][0] + mat [1][1];
+	} 	else {
+			for (col = 0; col < n; col++) {
+			sum += mat[0][col] + mat[n - 1][col]; 
+			}
+	
+			for (row = 1; row < n - 1; row++) {
+			sum += mat[row][0] + mat[row][n - 1];
+		} 
+	}
+	return sum; 
+}
+\end{lstlisting}
+\fi
+\section*{Problem 4: Working with Arrays and Pointers (Winter 2024 Final Exam, Q3)}
+In the box provided below, write the output generated after the following program is completely executed.
+
+\begin{lstlisting}[language=C]
+#include <stdio.h> 
+
+int main() {
+	int i = 1, *first;
+	int myArray[] = {0, 1, 2, 3, 7, 11, 15};
+	
+	while (myArray[i] < 3) { 
+		*( myArray + i) = 3; 
+		i++;
+	}
+	
+	*( myArray + i) = 0; 
+	first = myArray + i + 1; 
+	myArray[0] = *first; 
+	*first = myArray[i];
+	
+	printf("i = %d, *first = %d\n", i, *first); 
+	printf("myArray has ");
+	for (int i = 0; i < 7; i++) {
+	printf("%d, ", myArray[i]); 
+	}
+	
+	return 0; 
+}
+\end{lstlisting}
+\iffalse
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+i = 3, *first = 0
+myArray has 7, 3, 3, 0, 0, 11, 15,
+\end{lstlisting}
+\fi
+\section*{Problem 5:  Dynamic Memory Allocation ( Winter 2023 Midterm, Q9)}
+
+Create a code segment in C that takes a dynamically allocated array and adds another element to it. Use the following variables (assume they are already defined).
+\begin{enumerate}
+	\item \textit{int newNumber}, an integer value to be added into the array
+	\item \textit{ int numbersInArray}, a non-negative value of how many elements are presently in the array.
+	\item \textit{int *pArray}, a pointer to the array which is in dynamically allocated memory. The array already exists and has one or more elements. The code segment must add \textit{newNumber} to the present array, leaving \textit{pArray} pointing to the new array with \textit{newNumber} in it. Since the present array size is not large enough, you will have to allocate a new space and move the present values plus \textit{newNumber} to this space. Avoid memory leaks.
+\end{enumerate}
+\iffalse
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+int *extArray = (int *)malloc(sizeof(int) * (numInArray + 1));
+extArray[0] = newNum; // add at first since easier
+
+for (int i = 1; i <= numInArray; i++){
+	extArray[i] = pArray[i - 1]; // transfer old stuff
+}
+
+free(pArray);
+pArray = extArray; // reassign pointer to new array space
+\end{lstlisting}
+\fi
+\end{document}

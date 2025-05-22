@@ -1,0 +1,399 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+%\usepackage[spanish]{babel} %Castellanización
+\usepackage[T1]{fontenc} %escribe lo del teclado
+\usepackage[utf8]{inputenc} %Reconoce algunos símbolos
+\usepackage{lmodern} %optimiza algunas fuentes
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{hyperref} % Uso de links
+ \usepackage[most]{tcolorbox}
+ \usepackage{lmodern}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ \usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip} 
+\usepackage{mathpazo} 
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+ 
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+\title{APS 105: Computer Fundamentals}
+\date{}
+\author{Tutorial \#1\\ 
+Summer 2025}
+
+\maketitle
+
+\section*{Problem 1: Printing}
+Write a C program that produces the following output. The output must be exactly as shown:
+
+
+\begin{tcolorbox}[colback=gray!10, boxrule=0pt, sharp corners, enhanced jigsaw, left=3mm, right=3mm, top=1mm, bottom=1mm]
+	C uses escape sequences for a variety of purposes. \\
+	Some common ones are: \\
+	to print ", use \textbackslash" \\
+	to print \textbackslash, use \textbackslash\textbackslash \\
+	to jump to a new line, use \textbackslash n
+\end{tcolorbox}
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main(void) {
+// Print the required messages.
+printf("C uses escape sequences for a variety of purposes.\n");
+printf("Some common ones are:\n");
+printf("to print \", use \\\"\n");
+printf("to print \\, use \\\\\n");
+printf("to jump to a new line, use \\n\n");
+return 0;
+}
+
+\end{lstlisting}
+
+\section*{Problem 2: Unit Conversion}
+Write a C program that asks the user to enter a distance (assumed to be in metres). Convert this distance to yards, feet, inches and a decimal number, rounded to two decimal places, that indicates any remaining fraction of an inch. Use the conversion factor 1 inch = 2.54 cm. For example, if the user enters a value of 3.376, the output will be:
+\begin{tcolorbox}[colback=gray!10, boxrule=0pt, sharp corners, enhanced jigsaw, left=3mm, right=3mm, top=1mm, bottom=1mm]
+3 yards , 2 feet , 0 inches , 0.91 inches remainder
+\end{tcolorbox}
+The prompt to the user should take the form:
+\begin{tcolorbox}[colback=gray!10, boxrule=0pt, sharp corners, enhanced jigsaw, left=3mm, right=3mm, top=1mm, bottom=1mm]
+Please provide a distance in metres:
+\end{tcolorbox}
+written by itself on a single line.
+
+Note: if the input leads to something like the following:
+\begin{tcolorbox}[colback=gray!10, boxrule=0pt, sharp corners, enhanced jigsaw, left=3mm, right=3mm, top=1mm, bottom=1mm]
+	1 yards , 1 feet , 1 inches , 0.00 inches remainder
+\end{tcolorbox}
+
+This is fine. You do not need to change the output to read 1 yard, 1 foot, 1 inch. Likewise, if yards, feet or inches have a value of 0, no need to remove their prints from the output.
+
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main(void) {
+const double CmPerInch = 2.54;
+const double CmPerMetre = 100.00;
+const int InchesPerFoot = 12;
+const int InchesPerYard = 36;
+
+double distance;
+printf("Please provide a distance in metres: ");
+scanf("%lf", &distance);
+
+double distanceInInches = distance * CmPerMetre / CmPerInch;
+
+// truncate fractional part to get # of inches
+int inches = (int)distanceInInches;
+distanceInInches = distanceInInches - inches;
+
+int yards = inches / InchesPerYard;
+
+// how many inches are left after extracting yards
+inches = inches % InchesPerYard;
+
+int feet = inches / InchesPerFoot;
+
+// how many inches are left after extracting feet
+inches = inches % InchesPerFoot;
+
+printf("%d yards, %d feet, %d inches, %.2f inches remainder\n", yards, feet,
+inches, distanceInInches);
+
+return 0;
+}
+
+\end{lstlisting}
+\section*{Problem 3: Deciphering  a code}
+
+The scheme you use to encode a $4$-digit number takes the real combination and swaps the 1st and the $4$th digit of the combination, and replaces each of the $2$nd and $3$rd digits by their $9$’s complement. In other words, a combina- tion of the form abcd is encoded as $d(9-b)(9-c)a$. For example, if the actual combination is $0428$, the encrypted combination will be $8570$.
+
+Write a C program to implement this code-decode scheme. The user (you!) will, then, enter an encrypted combination and the program will output the real combination. A sample output from an execution of the program appears below:
+\begin{tcolorbox}[colback=gray!10, boxrule=0pt, sharp corners, enhanced jigsaw, left=3mm, right=3mm, top=1mm, bottom=1mm]
+ Enter an encrypted 4-digit combination: 8021<enter> \\
+ The real combination is: 1978
+\end{tcolorbox}
+When reading the 4-digit combination from user input, you are not allowed to scan in individual characters; instead, you should scan in a single integer using scanf.
+
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main(void) {
+int encComb;
+printf("Enter an encrypted 4-digit combination: ");
+scanf("%d", &encComb);
+
+// Determine the 4 digits of the encrypted combinaiton.
+int d4, d3, d2, d1;
+d4 = encComb / 1000;
+encComb = encComb % 1000;
+d3 = encComb / 100;
+encComb = encComb % 100;
+d2 = encComb / 10;
+encComb = encComb % 10;
+d1 = encComb;
+
+// printing the decryped combination: d4 and d1 are swaped. d3 and d2 are
+// are 9's complemented
+printf("\nThe real combination is: %d%d%d%d\n", d1, 9 - d3, 9 - d2, d4);
+
+return 0;
+}
+\end{lstlisting}
+
+\section*{Problem 4: Simple Loop (Winter 2022, Q8)}
+
+Write a complete C program that calculates and prints the sum of all numbers between 1 and 999 (inclusive) that satisfy all the following conditions:
+\begin{enumerate}
+	\item The number is divisible by 9.
+	\item The number is even.
+	\item The ten’s digit of the number is not 7. For example, the ten’s digit in 753 is 5, the ten’s digit of 671 is 7, and the ten’s digit of 9 is 0.
+\end{enumerate}
+
+\textbf{Example solution:}
+\begin{lstlisting}[language=C]
+#include <stdio.h>
+
+int main() {
+	int sum = 0;
+	for (int i = 1; i < 1000;i++) {
+		if (i%9==0 && i%2==0 && i/10%10!=7) {
+		sum += i;
+	}
+}
+printf("%d\n", sum);
+
+return 0;
+}
+
+\end{lstlisting}
+\iffalse
+\begin{lstlisting}[language=C, caption=Solution 1]
+void Q1()
+{
+    printf("Q1:\n");
+    //Approach 1
+	const int LENGTH = 5; 
+    //Declaring and initializing a string as a character array
+    char str[LENGTH + 1];
+    str[0] = 'H';
+    str[1] = 'e';
+    str[2] = 'l';
+    str[3] = 'l';
+    str[4] = 'o';
+    str[5] = '\0';
+    
+    printf("Approach 1: str = %s\n", str);
+    
+    //Approach 2
+    char s[] = "Hello";
+    // The length of the string could be ignored.
+    // However, if you declare a string without enough space, for example "char s[4] = "Hello";"
+    // A compile-time warning and run-time error would occur
+    
+    printf("Approach 2: s = %s\n", s);
+    
+    //Approach 3
+    char *p = "Hello";
+    // Declaring and initializing a string as a character pointer
+    printf("Approach 3: p = %s\n", p);
+    
+    
+    //Now try to change the characters in the string s
+    printf("\n");
+    s[1] = 'E';
+    printf("s = %s\n", s);
+    // But you cannot change s to point to another string. 
+    // For example, "s = "HELLO;" is wrong!!!
+    // A compile-time erro, which is "array type is not assignable", will occur
+    
+    // You can switch the pointer variable p to another string
+    p = "HELLO";
+    printf("p = %s\n", p);
+    // You cannot change characters in the string pointed to by p
+    // For example, "p[1] = 'E';" is wrong!
+    // It may cuase a segmentation fault or bus error (on Mac OS X)
+    
+    
+    // Compare the pointer values to see where these strings are
+    printf("\nThe pointer variable of s: %p\n", s);
+    printf("The pointer variable of p: %p\n\n", p);
+    
+    // Now let p point to s, so that we can safely change the characters
+    p = s;
+    printf("p = %s\n", p);
+    
+    p[2] = 'L';
+    printf("p = %s\n", p);
+    
+    }
+\end{lstlisting}
+The output is shown in fig. \ref{output1}.
+
+\begin{figure}[h]
+%\centering
+\includegraphics[scale=0.85]{Images/output1.png} 
+\caption{Output 1}
+\label{output1}
+\end{figure}
+
+
+\section{Character by character operations(b)}
+In this part, we will try to compute the number of words in the given sentence by applying character to character operations we learnt above.
+
+\begin{lstlisting}[language=C, caption=Solution 2]
+void Q2()
+{
+    printf("Q2:\n");
+    char s[] = "This is a given sentence.";
+    int numberOfSpaces = 0;
+    
+    for(int i = 0; s[i] != '\0'; i++)
+    {
+        if (s[i] == ' ')
+            numberOfSpaces++;
+    }
+    
+    printf("The sentence is:\n");
+    puts(s);// We can use puts() to print a string
+    printf("The number of words in the given sentence is %d\n",numberOfSpaces + 1);
+    }
+\end{lstlisting}
+The output is shown in fig.\ref{output2}.
+\begin{figure}[h]
+%\centering
+\includegraphics[scale=0.85]{Images/output2.png} 
+\caption{Output 2}
+\label{output2}
+\end{figure}
+
+\section{Basic string functions(a)}
+
+Currently, many useful functions were predefined for you, meaning that you could simply use those functions in your own program, without worrying about how the strings are processed within the functions. So, please just try to use them. In this problem, we would look for the index of the specific character in the given string. 
+
+(Hints: The $strchr()$ function finds the first occurrence of a character in a string. The character $c$ can be the null character ($\setminus0$); the ending null character of string is included in the search.) 
+
+\begin{lstlisting}[language=C, caption=Solution 3]
+void Q3()
+{
+    // strchr: Looking for a specific character in a given string
+    printf("\nQ3:\n");
+    char s[] = "This is a given string";
+    char a;
+    printf("What are you looking for?\n");
+    scanf("%c",&a);
+    printf("Looking for the character '%c' in \"%s\"...\n", a, s);
+    
+    char *p = strchr(s, 's');
+    
+    while (p != NULL) 
+    {
+        printf("Found at %ld\n",p - s + 1);
+        p = strchr(p + 1, 's');
+    }
+}
+\end{lstlisting}
+
+The output is shown in fig. \ref{output3}.
+
+
+\begin{figure}[h]
+%\centering
+\includegraphics[scale=0.85]{Images/output3.png} 
+\caption{Output 3}
+\label{output3}
+\end{figure}
+\section{Basic string function(b)}
+Let's explore more! 
+\begin{lstlisting}[language=C, caption= Solution 4]
+void Q4()
+{
+   printf("Q4:\n");
+   char s1[99];
+   char s2[99];
+   
+   printf("\nPlease enter a string:\n");
+   gets(s1);//Instead of "scanf"
+   printf("The string you entered is:\n");
+   puts(s1);//Instead of "printf"
+   
+   printf("Length of the string is: %lu\n", strlen(s1));
+   //strlen(string) could compute the length of the string
+ 
+   printf("\nPlease enter another string:\n");
+   gets(s2);
+   
+   if (strcmp(s1, s2) ==0) // strcmp(string1, string2) could compare these two strings 
+     {
+        printf("str1 and str2 are equal.\n");
+     }else
+      {
+         printf("str1 and str2 are different.\n");
+      }
+   
+   printf("\nLet's concatenate these two strings:\n");
+   strcat(s1,s2); // Concatenate string1 and string2.
+   printf("Output string after concatenation: %s\n", s1);
+   
+   printf("\nLet's copy the string str1 into string str2:\n");
+   strcpy(s2,s1);//copy string1 into string2,including the end character '\0'
+   printf("Str2 is: %s\n", s2);
+   
+    }
+\end{lstlisting}{}
+The output is shown in fig. \ref{output4}
+
+\begin{figure}[h]
+%\centering
+\includegraphics[scale=0.85]{Images/output4.png} 
+\caption{Output 4}
+\label{output4}
+\end{figure}
+
+% --------------------------------------------------------------
+%     You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+ \fi
+\end{document}
